@@ -8,18 +8,20 @@ export const register = createAsyncThunk('auth/register', async (userData, { rej
   } catch (error) {
     if (error.response && error.response.data) {
       if (error.response.data.errors) {
-        // Field-specific errors
+        // Field-specific validation errors
         const fieldErrors = error.response.data.errors.reduce((acc, err) => {
-          acc[err.path] = err.msg;  // Collect errors based on the "path" (e.g., "username", "email")
+          acc[err.path] = err.msg;
           return acc;
         }, {});
         return rejectWithValue(fieldErrors);
       }
-      // General error
-      return rejectWithValue({ general: error.response.data.message });
-    } else {
-      return rejectWithValue({ general: 'An unexpected error occurred' });
+      // Handle the specific "User already exists" error
+      if (error.response.data.msg) {
+        return rejectWithValue({ general: error.response.data.msg });
+      }
+      return rejectWithValue({ general: 'Registration failed' });
     }
+    return rejectWithValue({ general: 'An unexpected error occurred' });
   }
 });
 

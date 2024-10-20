@@ -42,7 +42,7 @@ const Login = () => {
             <FormLabel>Password</FormLabel>
             <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </FormControl>
-          {error && <Text color="red.500">{error}</Text>}
+          {error && <Text color="red.500">{error.msg}</Text>}
           <Button type="submit" colorScheme="blue" width="full" isLoading={isLoading}>
             Login
           </Button>
